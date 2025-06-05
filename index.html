@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عملیات و مدیریت لجستیک حمل و نقل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Default Dark Theme Colors (Material Darker Palette) */
+        :root {
+            --bg-primary: #212121;
+            /* App background */
+            --bg-card: #2E2E2E;
+            /* Cards, modals, containers */
+            --text-primary: #E0E0E0;
+            /* Main text, headings */
+            --text-secondary: #9E9E9E;
+            /* Subtle text, descriptions */
+            --accent-main: #82AAFF;
+            /* Accent Blue - Primary accent, links, focus */
+            --accent-light: #C792EA;
+            /* Accent Purple - Highlights, branding, emphasis */
+            --border-color: #1E1E1E;
+            /* Dividers, outlines */
+
+            /* Note-specific colors (derived to fit the new palette) */
+            --note-bg: rgba(130, 170, 255, 0.1);
+            /* Transparent Accent Blue for note background */
+            --note-text: #E0E0E0;
+            /* Main text color for notes */
+            --note-border: #82AAFF;
+            /* Accent Blue for note border */
+        }
+
+        /* Light Theme Colors (Material Lighter Palette) */
+        body.light-mode {
+            --bg-primary: #FAFAFA;
+            /* App background */
+            --bg-card: #FFFFFF;
+            /* Cards, modals, containers */
+            --text-primary: #212121;
+            /* Main text, headings */
+            --text-secondary: #616161;
+            /* Subtle text, descriptions */
+            --accent-main: #2962FF;
+            /* Accent Blue - Primary accent, links, focus */
+            --accent-light: #7C4DFF;
+            /* Accent Purple - Highlights, branding, emphasis */
+            --border-color: #E0E0E0;
+            /* Dividers, outlines */
+
+            /* Note-specific colors (derived to fit the new palette) */
+            --note-bg: rgba(41, 98, 255, 0.05);
+            /* Transparent Accent Blue for note background */
+            --note-text: #212121;
+            /* Main text color for notes */
+            --note-border: #2962FF;
+            /* Accent Blue for note border */
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            /* Increased line height */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container-wrapper {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        nav {
+            background-color: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow items to wrap on smaller screens */
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.2), 0 2px 8px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            /* Space below title on small screens */
+        }
+
+        @media (min-width: 768px) {
+
+            /* Adjust for medium screens and up */
+            nav h1 {
+                margin-bottom: 0;
+            }
+        }
+
+        nav .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            /* Space between links */
+            margin-right: auto;
+            /* Push links to the right in RTL */
+            margin-left: 1.5rem;
+            /* Space between links and button */
+        }
+
+        nav .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: var(--accent-main);
+        }
+
+        .theme-switch-button {
+            background-color: var(--accent-main);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            /* Space between icon and text if any */
+        }
+
+        .theme-switch-button:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.2), 0 2px 8px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.25), 0 5px 8px -3px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .section-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-main);
+            display: inline-block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sub-heading {
+            font-size: 1.625rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid var(--accent-light);
+        }
+
+        .sub-sub-heading {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .attribute-list,
+        .method-list {
+            list-style-type: none;
+            padding-right: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 2;
+        }
+
+        .attribute-list li,
+        .method-list li {
+            position: relative;
+            margin-bottom: 0.75rem;
+            padding-right: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .attribute-list li::before,
+        .method-list li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: var(--accent-main);
+            font-weight: bold;
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        .note {
+            background-color: var(--note-bg);
+            border-right: 5px solid var(--note-border);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            color: var(--note-text);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .emphasis {
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        header p,
+        footer {
+            color: var(--text-secondary);
+        }
+
+        /* Inline code styling */
+        code {
+            background-color: var(--note-bg);
+            color: var(--accent-main);
+            padding: 0.2em 0.4em;
+            border-radius: 0.25em;
+            font-family: 'Vazirmatn', monospace;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 767px) {
+
+            /* Adjust for small screens */
+            nav .nav-links {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+                margin-right: 0;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>مینی پروژه شماره دو</h1>
+        <div class="nav-links">
+            <a href="#section-setup">بخش ۱: آماده‌سازی محیط</a>
+            <a href="#section-manager-class">بخش ۲: کلاس مدیر لجستیک</a>
+            <a href="#section-demonstration">بخش ۳: نمایش قابلیت‌ها</a>
+        </div>
+        <button id="theme-toggle" class="theme-switch-button">
+            <i class="fas fa-sun" id="theme-icon"></i>
+        </button>
+    </nav>
+
+    <div class="container-wrapper">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-extrabold mb-4">عملیات و مدیریت لجستیک حمل و نقل</h1>
+        </header>
+
+        <section class="card">
+            <h2 class="section-heading">هدف</h2>
+            <p class="leading-relaxed mb-4">
+                در این بخش، شما بر اساس موجودیت هایی که در مینی‌پروژه ۱ طراحی کردید، ادامه خواهید داد. شما
+                منطقی را برای مدیریت این موجودیت‌ها پیاده‌سازی خواهید کرد که بر موارد زیر تمرکز دارد:
+            </p>
+            <ul class="attribute-list">
+                <li><span class="emphasis">ماندگاری داده‌ها (ساده‌شده)</span>: ذخیره و بازیابی داده‌های موجودیت.</li>
+                <li><span class="emphasis">عملیات CRUD</span>: ایجاد، خواندن، به‌روزرسانی و حذف موجودیت‌ها.</li>
+                <li><span class="emphasis">جستجو و فیلتر</span>: یافتن کارآمد موجودیت‌های خاص بر اساس معیارها.</li>
+                <li><span class="emphasis">شبیه‌سازی لجستیک (پایه)</span>: شبیه‌سازی حرکت و تخصیص بسته‌ها.</li>
+                <li><span class="emphasis">مدیریت خطا</span>: مدیریت قوی عملیات نامعتبر و موارد خاص.</li>
+            </ul>
+            <h2 class="section-heading mt-8">مفاهیم اصلی برای به کارگیری</h2>
+            <ul class="attribute-list">
+                <li><span class="emphasis">ساختارهای داده</span>: استفاده از لیست‌ها، دیکشنری‌ها یا مجموعه‌ها برای
+                    ذخیره‌سازی و بازیابی کارآمد.</li>
+                <li><span class="emphasis">کپسوله‌سازی</span>: بهبود بیشتر متدهای کلاس برای مدیریت وضعیت داخلی.</li>
+                <li><span class="emphasis">چندریختی</span>: استفاده از رابط‌های مشترک کلاس‌های پایه شما در صورت لزوم.
+                </li>
+                <li><span class="emphasis">مدیریت خطا</span>: پیاده‌سازی بلوک‌های <code>try-except</code> و استثنائات
+                    سفارشی.</li>
+                <li><span class="emphasis">تفکر الگوریتمی</span>: طراحی منطق جستجو و مدیریت کارآمد.</li>
+            </ul>
+        </section>
+
+        <section class="card" id="section-setup">
+            <h2 class="section-heading">بخش 1: آماده‌سازی محیط</h2>
+            <p class="leading-relaxed mb-4">
+                قبل از شروع، باید کلاس‌هایی را که در مینی‌پروژه ۱ تعریف کرده‌اید، وارد کنیم. تمام تعاریف کلاس‌های
+                تکمیل‌شده خود (<code>City</code>، <code>Package</code> و زیرکلاس‌های آن، <code>Container</code> و
+                زیرکلاس‌های آن، <code>Truck</code> و زیرکلاس‌های آن) را در سلول زیر کپی و جایگذاری کنید. این کار تضمین
+                می‌کند که تمام موجودیت‌های شما برای عملیات جدیدی که پیاده‌سازی خواهید کرد، در دسترس هستند.
+            </p>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">کد کلاس‌های مینی‌پروژه ۱</h3>
+            <div class="note">
+                <p class="font-bold">نکته:</p>
+                <p>تمام تعاریف کلاس‌های خود را از مینی‌پروژه ۱ در اینجا جایگذاری کنید.</p>
+            </div>
+        </section>
+
+        <section class="card" id="section-manager-class">
+            <h2 class="section-heading">بخش 2: کلاس <code>LogisticsManager</code></h2>
+            <p class="leading-relaxed mb-4">
+                برای متمرکز کردن عملیات و مدیریت مجموعه‌های موجودیت‌های لجستیکی خود، یک کلاس <span
+                    class="emphasis"><code>LogisticsManager</code></span> ایجاد خواهیم کرد. این کلاس به عنوان مغز سیستم
+                ما عمل
+                می‌کند و تمام عملیات CRUD، قابلیت‌های جستجو و منطق پایه لجستیک را مدیریت می‌کند.
+            </p>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">1. کلاس <code>LogisticsManager</code></h3>
+            <p>
+                <span class="emphasis">توضیحات</span>: تمام اشیاء <code>City</code>، <code>Package</code>،
+                <code>Container</code> و <code>Truck</code> را در سیستم مدیریت می‌کند. باید مجموعه‌هایی از این اشیاء را
+                نگهداری کند.
+            </p>
+            <ul class="attribute-list">
+                <li><span class="emphasis">ویژگی‌های اجباری</span>:
+                    <ul>
+                        <li><span class="emphasis"><code>cities</code></span> (دیکشنری): اشیاء <code>City</code> را بر
+                            اساس <code>id</code> آنها ذخیره می‌کند.</li>
+                        <li><span class="emphasis"><code>packages</code></span> (دیکشنری): اشیاء <code>Package</code> را
+                            بر اساس <code>id</code> آنها ذخیره می‌کند.</li>
+                        <li><span class="emphasis"><code>containers</code></span> (دیکشنری): اشیاء
+                            <code>Container</code> را بر اساس <code>id</code> آنها ذخیره می‌کند.
+                        </li>
+                        <li><span class="emphasis"><code>trucks</code></span> (دیکشنری): اشیاء <code>Truck</code> را بر
+                            اساس <code>id</code> آنها ذخیره می‌کند.</li>
+                    </ul>
+                </li>
+                <li><span class="emphasis">متدهای اجباری</span>:
+                    <ul>
+                        <li><span class="emphasis"><code>__init__</code></span> (سازنده): تمام دیکشنری‌های داخلی را
+                            مقداردهی اولیه می‌کند.</li>
+                        <li><span class="emphasis"><code>add_city(city)</code></span>: یک شیء <code>City</code> را به
+                            دیکشنری <code>cities</code> اضافه می‌کند. اطمینان حاصل کنید که ID منحصر به فرد است. در صورت
+                            موفقیت <code>True</code> و در صورت وجود ID قبلاً <code>False</code> را برمی‌گرداند.</li>
+                        <li><span class="emphasis"><code>get_city(city_id)</code></span>: یک شیء <code>City</code> را بر
+                            اساس ID آن بازیابی می‌کند. شیء <code>City</code> یا <code>None</code> را در صورت عدم یافتن
+                            برمی‌گرداند.</li>
+                        <li><span
+                                class="emphasis"><code>update_city(city_id, new_name=None, new_details=None)</code></span>:
+                            نام یا جزئیات یک شهر را به‌روزرسانی می‌کند. در صورت موفقیت <code>True</code> و در صورت عدم
+                            یافتن شهر <code>False</code> را برمی‌گرداند.</li>
+                        <li><span class="emphasis"><code>delete_city(city_id)</code></span>: یک شیء <code>City</code>
+                            را حذف می‌کند. <span class="emphasis">مهم</span>: قبل از حذف یک شهر، اطمینان حاصل کنید که
+                            هیچ بسته‌ای در حال حاضر به آن به عنوان مبدا یا مقصد اشاره نمی‌کند. در صورت وجود، از حذف
+                            جلوگیری کرده و <code>False</code> را برمی‌گرداند. در صورت حذف موفقیت‌آمیز <code>True</code>
+                            و
+                            در غیر این صورت <code>False</code> را برمی‌گرداند.</li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>add_package(package)</code></span>: یک شیء
+                            <code>Package</code> را به دیکشنری <code>packages</code> اضافه می‌کند. اطمینان حاصل کنید که
+                            ID منحصر به فرد است و شهرهای مبدا و مقصد آن در مجموعه <code>cities</code> مدیر موجود هستند.
+                            در صورت موفقیت <code>True</code> و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                        <li><span class="emphasis"><code>get_package(package_id)</code></span>: یک شیء
+                            <code>Package</code> را بر اساس ID آن بازیابی می‌کند. شیء <code>Package</code> یا
+                            <code>None</code> را در صورت عدم یافتن برمی‌گرداند.
+                        </li>
+                        <li><span
+                                class="emphasis"><code>update_package_destination(package_id, new_destination_city_id)</code></span>:
+                            مقصد یک بسته را به‌روزرسانی می‌کند. اطمینان حاصل کنید که
+                            <code>new_destination_city_id</code> با یک شهر موجود مطابقت دارد. در صورت موفقیت
+                            <code>True</code> و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                        <li><span class="emphasis"><code>delete_package(package_id)</code></span>: یک شیء
+                            <code>Package</code> را حذف می‌کند. <span class="emphasis">مهم</span>: اگر بسته در حال حاضر
+                            در یک کانتینر یا روی یک کامیون بارگیری شده باشد، ابتدا باید تخلیه شود. در صورت حذف
+                            موفقیت‌آمیز <code>True</code> و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>add_container(container)</code></span>: یک شیء
+                            <code>Container</code> را به دیکشنری <code>containers</code> اضافه می‌کند. اطمینان حاصل
+                            کنید که ID منحصر به فرد است. در صورت موفقیت <code>True</code> و در صورت وجود ID قبلاً
+                            <code>False</code> را برمی‌گرداند.
+                        </li>
+                        <li><span class="emphasis"><code>get_container(container_id)</code></span>: یک شیء
+                            <code>Container</code> را بر اساس ID آن بازیابی می‌کند. شیء <code>Container</code> یا
+                            <code>None</code> را در صورت عدم یافتن برمی‌گرداند.
+                        </li>
+                        <li><span class="emphasis"><code>delete_container(container_id)</code></span>: یک شیء
+                            <code>Container</code> را حذف می‌کند. <span class="emphasis">مهم</span>: اگر کانتینر در حال
+                            حاضر روی یک کامیون بارگیری شده باشد، ابتدا باید تخلیه شود. در صورت حذف موفقیت‌آمیز
+                            <code>True</code> و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>add_truck(truck)</code></span>: یک شیء <code>Truck</code> را به
+                            دیکشنری <code>trucks</code> اضافه می‌کند. اطمینان حاصل کنید که ID منحصر به فرد است. در صورت
+                            موفقیت <code>True</code> و در صورت وجود ID قبلاً <code>False</code> را برمی‌گرداند.</li>
+                        <li><span class="emphasis"><code>get_truck(truck_id)</code></span>: یک شیء <code>Truck</code> را
+                            بر اساس ID آن بازیابی می‌کند. شیء <code>Truck</code> یا <code>None</code> را در صورت عدم
+                            یافتن برمی‌گرداند.</li>
+                        <li><span class="emphasis"><code>delete_truck(truck_id)</code></span>: یک شیء <code>Truck</code>
+                            را حذف می‌کند. <span class="emphasis">مهم</span>: اگر کامیون دارای بسته یا کانتینر بارگیری
+                            شده باشد، ابتدا باید تخلیه شوند یا عملیات ممنوع شود. در صورت حذف موفقیت‌آمیز
+                            <code>True</code>
+                            و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span
+                                class="emphasis"><code>load_package_to_container(package_id, container_id)</code></span>:
+                            بسته و کانتینر را پیدا می‌کند، سپس سعی می‌کند بسته را با استفاده از متد
+                            <code>add_package</code>
+                            کانتینر در آن بارگیری کند. در صورت موفقیت <code>True</code> و در غیر این صورت
+                            <code>False</code> را برمی‌گرداند (به دلیل عدم سازگاری، محدودیت‌های وزن/تعداد و غیره).
+                        </li>
+                        <li><span
+                                class="emphasis"><code>unload_package_from_container(package_id, container_id)</code></span>:
+                            بسته و کانتینر را پیدا می‌کند، سپس سعی می‌کند بسته را از کانتینر تخلیه کند. در صورت موفقیت
+                            <code>True</code> و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>load_item_to_truck(item_id, truck_id)</code></span>: این متد
+                            باید هم بسته‌ها و هم کانتینرها را مدیریت کند. باید تشخیص دهد که <code>item_id</code> به یک
+                            <code>Package</code> یا <code>Container</code> اشاره دارد، سپس متد بارگیری مناسب را روی شیء
+                            <code>Truck</code> فراخوانی کند (یا <code>load_package</code> برای <code>NormalTruck</code>
+                            یا
+                            <code>load_container</code> برای <code>ContainerTruck</code>). در صورت موفقیت
+                            <code>True</code>
+                            و در غیر این صورت <code>False</code> را برمی‌گرداند.
+                        </li>
+                        <li><span class="emphasis"><code>unload_item_from_truck(item_id, truck_id)</code></span>:
+                            مشابه <code>load_item_to_truck</code>، این متد باید نوع آیتم را تشخیص داده و متد تخلیه
+                            مناسب را فراخوانی کند. در صورت موفقیت <code>True</code> و در غیر این صورت <code>False</code>
+                            را برمی‌گرداند.</li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>find_packages_by_destination(city_id)</code></span>: لیستی از
+                            اشیاء <code>Package</code> را که مقصد آنها شهر مشخص شده است، برمی‌گرداند. در صورت عدم یافتن،
+                            یک لیست خالی برمی‌گرداند.</li>
+                        <li><span class="emphasis"><code>find_containers_with_fragile_packages()</code></span>: لیستی
+                            از اشیاء <code>Container</code> را که حداقل یک <code>FragilePackage</code> دارند،
+                            برمی‌گرداند.
+                            این متد باید از طریق کانتینرها و سپس از طریق بسته‌های داخل آن کانتینرها پیمایش کند.</li>
+                        <li><span
+                                class="emphasis"><code>get_trucks_carrying_container_type(container_type)</code></span>:
+                            لیستی از اشیاء <code>Truck</code> را که در حال حاضر حداقل یک کانتینر از نوع مشخص شده (مانند
+                            "FreezerContainer"، "FragileContainer") حمل می‌کنند، برمی‌گرداند.</li>
+                    </ul>
+                    <ul class="attribute-list">
+                        <li><span class="emphasis"><code>get_all_packages_in_transit()</code></span>: لیستی از تمام
+                            بسته‌هایی را که در حال حاضر در هر کانتینر یا روی هر کامیون بارگیری شده‌اند، برمی‌گرداند.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="card" id="section-demonstration">
+            <h2 class="section-heading">بخش 3: نمایش قابلیت‌های کلاس جدید</h2>
+            <p class="leading-relaxed mb-4">
+                در این بخش، شما <code>LogisticsManager</code> را نمونه‌سازی کرده و از متدهای آن برای نمایش تمام
+                قابلیت‌هایی که پیاده‌سازی کرده‌اید، استفاده خواهید کرد. برای هر عملیات، پیام‌های واضحی را چاپ کنید که
+                موفقیت یا عدم موفقیت و دلیل آن را نشان دهد.
+            </p>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">1. مقداردهی اولیه</h3>
+            <p>
+                یک نمونه از <code>LogisticsManager</code> خود را ایجاد کنید.
+            </p>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">2. نمایش عملیات CRUD شهر</h3>
+            <ul class="attribute-list">
+                <li>چندین شیء <code>City</code> را اضافه کنید.</li>
+                <li>سعی کنید شهری را با ID تکراری اضافه کنید.</li>
+                <li>یک شهر را با ID (هم موجود و هم غیر موجود) بازیابی کنید.</li>
+                <li>جزئیات یک شهر را به‌روزرسانی کنید.</li>
+                <li>سعی کنید شهری را که بسته‌هایی با آن مرتبط هستند حذف کنید (باید شکست بخورد).</li>
+                <li>شهری را که هیچ وابستگی ندارد حذف کنید.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">3. نمایش عملیات CRUD بسته</h3>
+            <ul class="attribute-list">
+                <li>انواع مختلفی از اشیاء <code>Package</code> (فریزر، شکننده، عمومی) را اضافه کنید، اطمینان حاصل کنید
+                    که شهرهای مبدا/مقصد آنها در کلاس موجود هستند.</li>
+                <li>سعی کنید بسته‌ای را با شهرهای غیر موجود اضافه کنید.</li>
+                <li>یک بسته را با ID بازیابی کنید.</li>
+                <li>مقصد یک بسته را به‌روزرسانی کنید.</li>
+                <li>سعی کنید بسته‌ای را که در حال حاضر در یک کانتینر/کامیون بارگیری شده است حذف کنید (ابتدا باید شکست
+                    بخورد، سپس پس از تخلیه موفق شود).</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">4. نمایش عملیات CRUD کانتینر</h3>
+            <ul class="attribute-list">
+                <li>چندین شیء <code>Container</code> را اضافه کنید.</li>
+                <li>سعی کنید کانتینری را با ID تکراری اضافه کنید.</li>
+                <li>یک کانتینر را با ID بازیابی کنید.</li>
+                <li>سعی کنید کانتینری را که در حال حاضر روی یک کامیون بارگیری شده است حذف کنید (ابتدا باید شکست بخورد،
+                    سپس پس از تخلیه موفق شود).</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">5. نمایش عملیات CRUD کامیون</h3>
+            <ul class="attribute-list">
+                <li>اشیاء <code>NormalTruck</code> و <code>ContainerTruck</code> را اضافه کنید.</li>
+                <li>سعی کنید کامیونی را با ID تکراری اضافه کنید.</li>
+                <li>یک کامیون را با ID بازیابی کنید.</li>
+                <li>سعی کنید کامیونی را با آیتم‌های بارگیری شده حذف کنید (باید شکست بخورد).</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">6. نمایش منطق بارگیری/تخلیه بسته به کانتینر</h3>
+            <ul class="attribute-list">
+                <li>بسته‌های مناسب را در <code>FreezerContainer</code> و <code>FragileContainer</code> بارگیری کنید.
+                </li>
+                <li>سعی کنید بسته‌های ناسازگار (نوع اشتباه، خیلی سنگین، بیش از حد زیاد، دمای نامناسب) را در کانتینرهای
+                    تخصصی بارگیری کنید و نتایج را چاپ کنید.</li>
+                <li><code>get_current_weight()</code> و <code>get_current_package_count()</code> را برای کانتینرها نمایش
+                    دهید.</li>
+                <li>بسته‌ها را از کانتینرها تخلیه کنید.</li>
+                <li>سعی کنید یک بسته غیر موجود را تخلیه کنید.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3 class="sub-heading">7. نمایش منطق بارگیری/تخلیه آیتم به کامیون</h3>
+            <ul class="attribute-list">
+                <li>کانتینرها را روی <code>ContainerTruck</code> بارگیری کنید.</li>
+                <li>بسته‌ها را روی <code>NormalTruck</code> بارگیری کنید.</li>
+                <li>تلاش برای بارگیری بیش از حد کامیون‌ها یا بارگیری اقلام با نوع اشتباه (به عنوان مثال، بارگیری مستقیم
+                    یک <code>Package</code> روی <code>ContainerTruck</code>، یا یک <code>Container</code> روی
+                    <code>NormalTruck</code>) را نمایش دهید.
+                </li>
+                <li><code>get_current_payload_weight()</code> را برای کامیون‌ها نمایش دهید.</li>
+                <li>آیتم‌ها را از کامیون‌ها تخلیه کنید.</li>
+            </ul>
+        </section>
+
+        <footer class="text-center py-8 text-gray-500 text-sm">
+            <p>این سند برای پروژه کوچک عملیات و مدیریت لجستیک حمل و نقل ایجاد شده است.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const body = document.body;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light-mode') {
+                body.classList.add('light-mode');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon'); // Show moon icon for light mode (to switch to dark)
+            } else {
+                body.classList.remove('light-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun'); // Show sun icon for dark mode (to switch to light)
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('light-mode')) {
+                    body.classList.remove('light-mode');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun'); // Switch to sun icon
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    body.classList.add('light-mode');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon'); // Switch to moon icon
+                    localStorage.setItem('theme', 'light-mode');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
